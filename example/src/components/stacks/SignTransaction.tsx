@@ -37,6 +37,7 @@ export function SignTransaction({ publicKey }: Props) {
   const [postConditionMode, setPostConditionMode] = useState<PostConditionMode>(
     PostConditionMode.Deny,
   );
+  const [addPostConditions, setAddPostConditions] = useState(false);
 
   const requestSignTransaction = async (transaction: StacksTransactionWire) => {
     try {
@@ -58,6 +59,8 @@ export function SignTransaction({ publicKey }: Props) {
   };
 
   function handleSignTransactionContractCallClick() {
+    const postConditionAddress = 'SP2FFKDKR122BZWS7GDPFWC0J0FK4WMW5NPQ0Z21M';
+
     makeUnsignedContractCall({
       fee: 3000,
       contractAddress: 'SP21YTSM60CAY6D011EZVEVNKXVW8FVZE198XEFFP',
@@ -65,6 +68,23 @@ export function SignTransaction({ publicKey }: Props) {
       functionName: 'set-stx-buffer',
       functionArgs: [uintCV(1)],
       postConditionMode,
+      postConditions: addPostConditions
+        ? [
+            {
+              type: 'stx-postcondition',
+              address: postConditionAddress,
+              condition: 'gt',
+              amount: 1000,
+            },
+            {
+              type: 'ft-postcondition',
+              address: postConditionAddress,
+              asset: 'SP102V8P0F7JX67ARQ77WEA3D3CFB5XW39REDT0AM.token-alex::token-alex',
+              condition: 'eq',
+              amount: 1000,
+            },
+          ]
+        : undefined,
       publicKey,
     })
       .then((transaction) => {
@@ -119,6 +139,11 @@ export function SignTransaction({ publicKey }: Props) {
           label={`Post condition mode: ${
             postConditionMode === PostConditionMode.Allow ? 'Allow' : 'Deny'
           } `}
+        />
+        <Switch
+          checked={addPostConditions}
+          onChange={() => setAddPostConditions((prev) => !prev)}
+          label={addPostConditions ? 'Add post conditions' : 'No post conditions'}
         />
         <Button onClick={handleSignTransactionSTXTokenTransferClick}>
           Sign Transaction (token transfer)
