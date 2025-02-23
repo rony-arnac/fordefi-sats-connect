@@ -90,6 +90,13 @@ export function SignTransaction({ publicKey }: Props) {
               assetId: uintCV(19),
               condition: 'sent',
             },
+            {
+              type: 'nft-postcondition',
+              address: postConditionAddress,
+              asset: 'SP1C2K603TGWJGKPT2Z3WWHA0ARM66D352385TTWH.welsh-punk::welsh-punk',
+              assetId: uintCV(160),
+              condition: 'not-sent',
+            },
           ]
         : undefined,
       publicKey,
