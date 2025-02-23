@@ -83,6 +83,13 @@ export function SignTransaction({ publicKey }: Props) {
               condition: 'eq',
               amount: 1000,
             },
+            {
+              type: 'nft-postcondition',
+              address: postConditionAddress,
+              asset: 'SP217KARG4JGPMTEFT1PXC6T94E485EXQRSJQD3YC.StacksDao::stacksdao',
+              assetId: uintCV(19),
+              condition: 'sent',
+            },
           ]
         : undefined,
       publicKey,
